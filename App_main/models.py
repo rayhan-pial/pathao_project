@@ -51,6 +51,7 @@ status_choice = (
     ('Completed', 'Completed'),
     ('Completed', 'Completed'),
     ('Final approval from boss', 'Final approval from boss'),
+    ('Final approval from admin', 'Final approval from admin'),
 )
 
 
