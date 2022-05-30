@@ -15,7 +15,7 @@ from django.urls import reverse
 from App_auth.forms import SignUpForm
 from App_auth.models import Profile, User
 from App_auth.views import is_customer, is_admin, is_boss_admin, is_admin_ISD, is_admin_OSD
-from App_main.forms import BillingForm, ProfileForm, ProductModelForm
+from App_main.forms import BillingForm, ProfileForm, ProductModelForm, CustomerAddressForm
 from App_main.models import ProductModel, Cart, Order, BillingAddress, ShortageOfProduct, CategoryModel
 
 
@@ -153,7 +153,7 @@ def purchase_action(request):
 
 
 def profile_view(request):
-    profile = Profile.objects.get_or_create(user=request.user)[0]
+    profile = Profile.objects.get_or_create(user=request.user)
     form = ProfileForm(instance=profile)
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
@@ -218,7 +218,7 @@ def admin_dashboard(request):
     allCustomers = checkAdmin(list(total_user), [])
     total_customer = len(allCustomers)
     total_product = ProductModel.objects.all()
-    total_orders = Order.objects.all()
+    total_orders = Order.objects.filter(status="Final approval from admin")
     completed_orders = Order.objects.filter(status='Completed')
     pending_order = []
     for i, j in zip(total_orders, completed_orders):
@@ -472,7 +472,7 @@ def register_user_by_boss_admin(request):
             return HttpResponseRedirect(reverse('App_main:boss_admin_dashboard'))
         else:
             messages.info(request, "Password doesn't match!!!")
-            return redirect('App_main:boss-admin_dashboard')
+            return redirect('App_main:boss_admin_dashboard')
 
 
 @login_required
@@ -531,6 +531,7 @@ def boss_admin_generates_invoice(request, OrderID):
 @user_passes_test(is_admin_OSD)
 def OSD_admin_dashboard(request):
     form = SignUpForm()
+    customerForm = CustomerAddressForm()
     total_user = User.objects.filter(is_superuser=False, groups=2)
     t_user = []
     try:
@@ -565,6 +566,7 @@ def OSD_admin_dashboard(request):
         'no_of_total_orders': len(t_order),
         'total_shortage': total_shortages,
         'signupForm': form,
+        'customerAddressForm': customerForm,
     }
     return render(request, 'App_main/OSD_Admin_dashboard.html', context=content)
 
@@ -632,12 +634,14 @@ def OSD_delete_shortage_table(request, table_key):
 def OSD_admin_register_customer(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
-        if form.is_valid():
+        form2 = CustomerAddressForm(request.POST)
+        if form.is_valid() and form2.is_valid():
             user = form.save()
-            try:
-                adminCheckbox = request.POST.get('admin-checkbox')
-            except:
-                adminCheckbox = None
+            customerAddress = form2.save()
+            sec_phone = form2.cleaned_data.get('primary_phone_number')
+            prof = Profile(user=user, shop=customerAddress,
+                           secondary_phone_number=sec_phone)
+            prof.save()
             my_admin_group = Group.objects.get_or_create(name='CUSTOMER')
             my_admin_group[0].user_set.add(user)
             messages.info(request, "Successfully Registered")
@@ -703,6 +707,7 @@ def OSD_admin_generates_invoice(request, OrderID):
 @user_passes_test(is_admin_ISD)
 def ISD_admin_dashboard(request):
     form = SignUpForm()
+    customerAddressForm = CustomerAddressForm()
     total_user = User.objects.filter(is_superuser=False, groups=2)
     t_user = []
     try:
@@ -732,6 +737,7 @@ def ISD_admin_dashboard(request):
         'total_orders': total_orders,
         'total_shortage': total_shortages,
         'signupForm': form,
+        'customerAddressForm': customerAddressForm,
     }
     return render(request, 'App_main/ISD_Admin_dashboard.html', context=content)
 
@@ -799,19 +805,16 @@ def ISD_delete_shortage_table(request, table_key):
 def ISD_admin_register_customer(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
-        if form.is_valid():
+        form2 = CustomerAddressForm(request.POST)
+        if form.is_valid() and form2.is_valid():
             user = form.save()
-            try:
-                adminCheckbox = request.POST.get('admin-checkbox')
-            except:
-                adminCheckbox = None
-
-            if adminCheckbox:
-                my_admin_group = Group.objects.get_or_create(name='ADMIN')
-                my_admin_group[0].user_set.add(user)
-            else:
-                my_admin_group = Group.objects.get_or_create(name='CUSTOMER')
-                my_admin_group[0].user_set.add(user)
+            customerAddress = form2.save()
+            sec_phone = form2.cleaned_data.get('primary_phone_number')
+            prof = Profile(user=user, shop=customerAddress,
+                           secondary_phone_number=sec_phone)
+            prof.save()
+            my_admin_group = Group.objects.get_or_create(name='CUSTOMER')
+            my_admin_group[0].user_set.add(user)
             messages.info(request, "Successfully Registered")
             return HttpResponseRedirect(reverse('App_main:ISD_admin_dashboard'))
         else:
@@ -892,7 +895,7 @@ def this_month_orders(request):
     if request.method == 'POST':
         month = request.POST.get('month')
         year = request.POST.get('year')
-        total_order_in_that_month = Order.objects.filter(created__month=diction[month], created__year=year)
+        total_order_in_that_month = Order.objects.filter(created__month=diction[month], created__year=year, status="C")
         content['order_of_this_month'] = total_order_in_that_month
         print(total_order_in_that_month)
     return render(request, 'App_main/this_month_orders.html', context=content)
