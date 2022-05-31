@@ -146,7 +146,7 @@
     <div>
         <div style="float: right;" class="mb-5 mr-3">
             {% if carts %}
-                {% if user.profile_user.shop_address %}
+                {% if user.profile_user.shop.shop_address %}
                     <button class="btn btn-success" type="button"
                             onclick="window.location.href='{% url 'App_main:purchase' %}'">
                         Proceed to Checkout

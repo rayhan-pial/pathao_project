@@ -140,32 +140,6 @@
         {% endfor %}
     {% endif %}
     <!-- Modal -->
-    <div class="modal fade" id="AdminFormModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                </div>
-                <form action="{% url 'App_main:boss-register-with-admin' %}" method="post">
-                    <div class="modal-body">
-                        {% csrf_token %}
-                        {{ signupForm|crispy }}
-                        <input type="checkbox" id="id-admin-checkbox" name="admin-checkbox" style="width: 4%"
-                               value="Yes" checked required>
-                        <label for="id-admin-checkbox">Admin</label>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close
-                        </button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
     <div class="modal fade" id="CustomerFormModal" tabindex="-1" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -175,10 +149,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                 </div>
-                <form action="{% url 'App_main:boss-register-with-admin' %}" method="post">
+                <form action="{% url 'App_main:register-with-isd-admin' %}" method="post">
                     <div class="modal-body">
                         {% csrf_token %}
                         {{ signupForm|crispy }}
+                        {{ customerAddressForm|crispy }}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close

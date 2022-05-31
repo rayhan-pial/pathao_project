@@ -149,13 +149,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                 </div>
-                <form action="{% url 'App_main:boss-register-with-admin' %}" method="post">
+                <form action="{% url 'App_main:register-with-osd-admin' %}" method="post">
                     <div class="modal-body">
                         {% csrf_token %}
                         {{ signupForm|crispy }}
-                        <input type="checkbox" id="id-admin-checkbox" name="admin-checkbox" style="width: 4%"
-                               value="Yes" checked required>
-                        <label for="id-admin-checkbox">Admin</label>
+                        {{ customerAddressForm|crispy }}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close

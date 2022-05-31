@@ -37,9 +37,9 @@ urlpatterns = [
     path('boss-update-order-item-quantity/', views.boss_admin_updates_asking_quantity,
          name='boss-update-order-item-quantity'),
     path('boss-invoice-generator/<int:OrderID>/', views.boss_admin_generates_invoice, name='boss-invoice-generator'),
-    # OSD
+    # ISD
     path('ISD-admin/', views.ISD_admin_dashboard, name='ISD_admin_dashboard'),
-    path('register-with-Isd-admin/', views.ISD_admin_register_customer, name='register-with-osd-admin'),
+    path('register-with-Isd-admin/', views.ISD_admin_register_customer, name='register-with-isd-admin'),
     path('Isd-update-product/', views.ISD_update_product, name='ISD-update-product'),
     path('Isd-delete-product/<int:product_key>/', views.ISD_delete_product, name='ISD-delete-product'),
     path('Isd-add-new-product/', views.ISD_add_new_product, name='ISD-add-new-product'),
@@ -50,7 +50,7 @@ urlpatterns = [
     path('Isd-update-order-item-quantity/', views.ISD_admin_updates_asking_quantity,
          name='ISD-update-order-item-quantity'),
     path('Isd-invoice-generator/<int:OrderID>/', views.ISD_admin_generates_invoice, name='ISD-invoice-generator'),
-    # ISD
+    # OSD
     path('OSD-admin/', views.OSD_admin_dashboard, name='OSD_admin_dashboard'),
     path('register-with-osd-admin/', views.OSD_admin_register_customer, name='register-with-osd-admin'),
     path('osd-update-product/', views.OSD_update_product, name='osd-update-product'),

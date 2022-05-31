@@ -254,14 +254,14 @@
                     {{ profile.full_name }}
                 </div>
                 <div class="about">
-                    {{ profile.phone_number }} | {{ profile.user.email }}
+                    {{ profile.secondary_phone_number }} | {{ profile.user.email }}
                 </div>
                 <div class="about">
-                    {{ profile.shop_address }}
+                    {{ profile.shop.shop_address }}
                 </div>
                 <div class="buttons">
-                    <button>{{ profile.city }}</button>
-                    <button>{{ profile.zipcode }}</button>
+                    <button>{{ profile.shop.city }}</button>
+                    <button>{{ profile.shop.zipcode }}</button>
                 </div>
             {% else %}
                 <div class="name">
@@ -273,10 +273,6 @@
                 </div>
                 <div class="about">
                     <i class="fa fa-exclamation-triangle" style="color: darkred"> No Shop Address </i>
-                </div>
-                <div class="buttons">
-                    <button>{{ profile.city }}</button>
-                    <button>{{ profile.zipcode }}</button>
                 </div>
                 <div class="buttons text-center mt-3">
                     <button onclick="document.getElementById('id-profile-form').style.display='block';">
