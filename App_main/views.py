@@ -710,18 +710,22 @@ def ISD_admin_dashboard(request):
     customerAddressForm = CustomerAddressForm()
     total_user = User.objects.filter(is_superuser=False, groups=2)
     t_user = []
-    try:
-        for i in total_user:
-            if i.profile_user.shop.city == 'Dhaka':
+    for i in total_user:
+        try:
+            if i.profile_user.shop.city == "Dhaka":
                 t_user.append(i)
-    except Exception as e:
-        pass
+        except:
+            pass
     total_customer = len(t_user)
     total_product = ProductModel.objects.all()
     total_orders = Order.objects.all()
     t_order = []
     for i in total_orders:
-        t_order.append(i)
+        try:
+            if i.user.profile_user.shop.city == "Dhaka":
+                t_order.append(i)
+        except:
+            pass
     completed_orders = Order.objects.filter(status='Completed')
     pending_order = []
     for i, j in zip(total_orders, completed_orders):
