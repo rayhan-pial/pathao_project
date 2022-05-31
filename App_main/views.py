@@ -534,12 +534,13 @@ def OSD_admin_dashboard(request):
     customerForm = CustomerAddressForm()
     total_user = User.objects.filter(is_superuser=False, groups=2)
     t_user = []
-    try:
-        for i in total_user:
+    print(total_user)
+    for i in total_user:
+        try:
             if i.profile_user.shop.city != "Dhaka":
                 t_user.append(i)
-    except:
-        pass
+        except:
+            pass
     total_customer = len(t_user)
     total_product = ProductModel.objects.all()
     total_orders = Order.objects.all()
