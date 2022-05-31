@@ -1,6 +1,6 @@
 from django import forms
 
-from App_auth.models import Profile
+from App_auth.models import Profile, CustomerShop
 from App_main.models import *
 
 
@@ -13,7 +13,13 @@ class ProductModelForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        exclude = ['user', ]
+        exclude = ['user', 'shop']
+
+
+class CustomerAddressForm(forms.ModelForm):
+    class Meta:
+        model = CustomerShop
+        fields = "__all__"
 
 
 class ProfilePictureChangeForm(forms.ModelForm):
