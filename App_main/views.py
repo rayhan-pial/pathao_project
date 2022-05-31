@@ -534,7 +534,6 @@ def OSD_admin_dashboard(request):
     customerForm = CustomerAddressForm()
     total_user = User.objects.filter(is_superuser=False, groups=2)
     t_user = []
-    print(total_user)
     for i in total_user:
         try:
             if i.profile_user.shop.city != "Dhaka":
@@ -545,12 +544,12 @@ def OSD_admin_dashboard(request):
     total_product = ProductModel.objects.all()
     total_orders = Order.objects.all()
     t_order = []
-    try:
-        for i in total_orders:
+    for i in total_orders:
+        try:
             if i.user.profile_user.shop.city != "Dhaka":
                 t_order.append(i)
-    except Exception as e:
-        pass
+        except:
+            pass
     completed_orders = Order.objects.filter(status='Completed')
     pending_order = []
     for i, j in zip(total_orders, completed_orders):
